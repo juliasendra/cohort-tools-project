@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cohorts = require("./cohorts.json");
+const cors = require("cors");
 const students = require("./students.json");
 const PORT = 5005;
 
@@ -14,6 +15,7 @@ const PORT = 5005;
 const app = express();
 
 
+
 // MIDDLEWARE
 // Research Team - Set up CORS middleware here:
 // ...
@@ -22,11 +24,20 @@ app.use(morgan("dev"));
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(
+  cors({
+    // Add the URLs of allowed origins to this array
+   origin: ['http://localhost:5173']
+  })
+);
+
 
 
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
 // ...
+
+
 app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
