@@ -4,8 +4,12 @@ const cookieParser = require("cookie-parser");
 const cohorts = require("./cohorts.json");
 const cors = require("cors");
 const students = require("./students.json");
+const mongoose = require("mongoose");
+const Cohort = require("./models/Cohort.model");
+const Student = require("./models/Student.model");
+ 
 const PORT = 5005;
-
+ 
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
 // ...
@@ -31,7 +35,10 @@ app.use(
   })
 );
 
-
+mongoose
+  .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
+  .then(x => console.log(`Connected to Database: "${x.connections[0].name}"`))
+  .catch(err => console.error("Error connecting to MongoDB", err));
 
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
@@ -49,6 +56,7 @@ app.get("/api/students", (req, res) => {
 app.get("/api/cohorts", (req, res) => {
   res.json(cohorts);
 });
+
 
 
 // START SERVER
