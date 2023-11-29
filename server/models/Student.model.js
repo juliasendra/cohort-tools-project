@@ -16,7 +16,7 @@ const studentSchema = new Schema({
 	projects: [],
 	cohort: {
 		   type: Schema.Types.ObjectId,
-      		   ref: "Cohort"
+      		ref: "Cohort"
 		}
 });
 
