@@ -49,28 +49,28 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
-app.get("/api/cohorts", (req, res) => {
+app.get("/api/cohorts", (req, res, next) => {
   Cohort.find()
     .then((cohortsArr) => {
       res.status(200).json(cohortsArr);
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error getting the cohort list" })
+      next(error)
     })
 });
 
-app.get("/api/cohorts/:cohortId", (req, res) => {
+app.get("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   Cohort.findById(cohortId)
     .then((cohortDetails) => {
       res.status(200).json(cohortDetails);
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error getting the cohort details" })
+      next(error)
     });
 });
 
-app.post("/api/cohorts", (req, res) => {
+app.post("/api/cohorts", (req, res, next) => {
   const { inProgress, cohortSlug, cohortName,
     program, campus, startDate, endDate, programManager,
     leadTeacher, totalHours } = req.body;
@@ -93,11 +93,11 @@ app.post("/api/cohorts", (req, res) => {
       res.status(201).json(createdCohort)
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error creating a new cohort" })
+      next(error)
     })
 })
 
-app.put("/api/cohorts/:cohortId", (req, res) => {
+app.put("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
 
   const { inProgress, cohortSlug, cohortName,
@@ -121,33 +121,33 @@ app.put("/api/cohorts/:cohortId", (req, res) => {
     .then((updatedCohort) => {
       res.status(200).json(updatedCohort)
     }).catch(() => {
-      res.status(500).json({ message: "Error updating cohort" })
+      next(error)
     });
 })
 
-app.delete("/api/cohorts/:cohortId", (req, res) => {
+app.delete("/api/cohorts/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
   Cohort.findByIdAndDelete(cohortId)
     .then(() => {
       res.status(204).send()
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error deleting cohort" })
+      next(error)
     });
 });
 
-app.get("/api/students", (req, res) => {
+app.get("/api/students", (req, res, next) => {
   Student.find()
   .populate("cohort")
     .then((studentsArr) => {
       res.status(200).json(studentsArr)
     })
     .catch((error) => {
-      res.status(500).json({ message: "error getting the list of students" })
+      next(error)
     })
 })
 
-app.get("/api/students/:studentId", (req, res) => {
+app.get("/api/students/:studentId", (req, res, next) => {
 
   const { studentId } = req.params;
 
@@ -157,11 +157,11 @@ app.get("/api/students/:studentId", (req, res) => {
       res.status(200).json(studentDetails)
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error getting student" })
+      next(error)
     })
 })
 
-app.get("/api/students/cohort/:cohortId", (req, res) => {
+app.get("/api/students/cohort/:cohortId", (req, res, next) => {
   const { cohortId } = req.params;
 
   Cohort.findById(cohortId)
@@ -170,11 +170,11 @@ app.get("/api/students/cohort/:cohortId", (req, res) => {
       res.status(200).json(cohortDetails)
     })
     .catch((error) => {
-      res.status(500).json({ message: "Error getting cohort details" })
+      next(error)
     })
 })
 
-app.post("/api/students", (req, res) => {
+app.post("/api/students", (req, res, next) => {
   const { firstName, lastName, email, phone, linkedinUrl, languages, program, projects, cohort } = req.body;
   const newRequestBody = {
     firstName,
@@ -193,11 +193,11 @@ app.post("/api/students", (req, res) => {
       res.status(201).json(createdStudent)
     })
     .catch((error) => {
-      res.status(500).json({message: "Error creating new student"})
+      next(error)
     })
 })
 
-app.put("/api/students/:studentId", (req, res) => {
+app.put("/api/students/:studentId", (req, res, next) => {
 const {studentId} = req.params;
 const { firstName, lastName, email, phone, linkedinUrl, languages, program, projects, cohort } = req.body;
   const newRequestBody = {
@@ -217,20 +217,26 @@ const { firstName, lastName, email, phone, linkedinUrl, languages, program, proj
       res.status(200).json(updatedStudent)
     })
     .catch((error) => {
-      res.status(500).json({message: "Error updating student"})
+      next(error)
     });
 });
 
-app.delete("/api/students/:studentId", (req, res) => {
+app.delete("/api/students/:studentId", (req, res, next) => {
   const {studentId} = req.params;
   Student.findByIdAndDelete(studentId)
     .then(() => {
       res.status(204).send()
     })
     .catch((error) => {
-      res.status(500).json({message: "Error deleting student"})
+      next(error)
     });
 });
+
+const {errorHandler, notFoundHandler} = require("./middleware/error-handling");
+
+app.use(errorHandler);
+app.use(notFoundHandler);
+
 
 // START SERVER
 app.listen(PORT, () => {
