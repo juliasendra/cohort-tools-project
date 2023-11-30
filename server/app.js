@@ -117,7 +117,7 @@ app.put("/api/cohorts/:cohortId", (req, res) => {
     totalHours
   }
 
-  Cohort.findByIdAndUpdate(cohortId, newRequestBody)
+  Cohort.findByIdAndUpdate(cohortId, newRequestBody,{new:true})
     .then((updatedCohort) => {
       res.status(200).json(updatedCohort)
     }).catch(() => {
@@ -212,7 +212,7 @@ const { firstName, lastName, email, phone, linkedinUrl, languages, program, proj
     cohort
   }
 
-  Student.findByIdAndUpdate(studentId,newRequestBody)
+  Student.findByIdAndUpdate(studentId,newRequestBody,{new:true})
     .then((updatedStudent) => {
       res.status(200).json(updatedStudent)
     })
