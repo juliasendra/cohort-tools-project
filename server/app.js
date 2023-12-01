@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
 require("dotenv").config();
+const {isAuthenticated} = require("./middleware/jwt.middleware");
 
 const PORT = 5005;
 
@@ -52,8 +53,8 @@ app.get("/docs", (req, res) => {
 
 //Routes handling
 app.use("/api", require("./routes/index.routes"));
-app.use("/api",require("./routes/cohort.routes"));
-app.use("/api",require("./routes/student.routes"));
+app.use("/api", isAuthenticated ,require("./routes/cohort.routes"));
+app.use("/api", isAuthenticated , require("./routes/student.routes"));
 app.use("/auth", require ("./routes/auth.routes"))
 
 
