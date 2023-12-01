@@ -52,7 +52,8 @@ app.get("/docs", (req, res) => {
 //Routes handling
 app.use("/api", require("./routes/index.routes"));
 app.use("/api",require("./routes/cohort.routes"));
-app.use("/api",require("./routes/student.routes"))
+app.use("/api",require("./routes/student.routes"));
+app.use("/auth", require ("./routes/auth.routes"))
 
 
 
