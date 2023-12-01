@@ -15,7 +15,7 @@ function notFoundHandler (req, res, next) {
     .json({message: "This route does not exist"})
 }
 
-module.exports = {
-    errorHandler,
-    notFoundHandler
+module.exports = {  
+    notFoundHandler,
+    errorHandler
 }
