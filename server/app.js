@@ -7,6 +7,7 @@ const students = require("./students.json");
 const mongoose = require("mongoose");
 const Cohort = require("./models/Cohort.model");
 const Student = require("./models/Student.model");
+require("dotenv").config();
 
 const PORT = 5005;
 
